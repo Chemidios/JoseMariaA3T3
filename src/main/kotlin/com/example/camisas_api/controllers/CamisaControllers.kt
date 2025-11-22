@@ -26,11 +26,31 @@ class CamisaController(
     }
 
     @PostMapping("")
-    fun createCamisa(@RequestBody request: CamisaRequestDto): ResponseEntity<CamisaResponseDto> {
-        val nuevaCamisa = camisaService.create(request)
-        // Devolvemos un código 201 Created y la camisa creada en el body.
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaCamisa)
+    fun createCamisa(@RequestBody request: CamisaRequestDto): ResponseEntity<CamisaResponseDto> {        // Bloque de depuración para forzar que el error se muestre en los logs
+        return try {
+            println("API: INTENTANDO CREAR CAMISA -> $request") // Mensaje de diagnóstico
+
+            val nuevaCamisa = camisaService.create(request)
+
+            println("API: CAMISA CREADA CON ÉXITO -> $nuevaCamisa") // Mensaje de éxito
+
+            ResponseEntity.status(HttpStatus.CREATED).body(nuevaCamisa)
+
+        } catch (e: Exception) {
+            // Si algo dentro del 'try' falla, el programa salta aquí
+            println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            println("!!!!!!!!!!!!! ERROR CAPTURADO EN POST !!!!!!!!!!!!!!!")
+            println("CLASE DEL ERROR: ${e.javaClass.simpleName}")
+            println("MENSAJE DEL ERROR: ${e.message}")
+            println("STACK TRACE COMPLETO (LA PISTA DEFINITIVA):")
+            e.printStackTrace() // Este comando imprime el informe completo del error en los logs
+            println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+            // Devolvemos el mismo error 500 a Postman, pero ahora sabremos la causa
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+        }
     }
+
 
     @PutMapping("/{id}")
     fun updateCamisa(
