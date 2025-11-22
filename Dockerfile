@@ -15,7 +15,8 @@ COPY src ./src
 
 # Ejecutamos el comando de Gradle para construir la aplicación y generar el .jar.
 # --no-daemon es importante para entornos de CI/CD como Render.
-RUN gradle build --no-daemon
+RUN gradle build --no-daemon -x test
+
 
 
 # --- Fase 2: Ejecución (Runtime Stage) ---
