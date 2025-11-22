@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/camisas") // La URL base para todos los endpoints de este controlador
-class CamisaController(
+class CamisaControllers(
     private val camisaService: CamisaService
 ) {
 
